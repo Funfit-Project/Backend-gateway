@@ -1,0 +1,36 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: auth_join
+          uri: http://54.91.140.154:8080
+          predicates:
+            - Path=/auth/join/**
+
+        - id: auth_login
+          uri: http://54.91.140.154:8080
+          predicates:
+            - Path=/auth/login/**
+
+        - id: auth
+          uri: http://54.91.140.154:8080
+          predicates:
+            - Path=/auth/**
+          filters:
+            - JwtFilter
+
+        - id: pt
+          uri: http://18.204.194.45:8080
+          predicates:
+            - Path=/pt/**
+          filters:
+            - JwtFilter
+
+        - id: community
+          uri: http://3.87.92.5:8080
+          predicates:
+            - Path=/community/**
+          filters:
+            - JwtFilter
+jwt:
+  secret: ${JWT_SECRET}
