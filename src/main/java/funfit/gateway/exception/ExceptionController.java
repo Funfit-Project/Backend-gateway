@@ -1,0 +1,19 @@
+package funfit.gateway.exception;
+
+import funfit.gateway.exception.customException.*;
+import funfit.gateway.responseDto.ErrorResponse;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+@RestControllerAdvice
+public class ExceptionController {
+
+    @ExceptionHandler
+    public ResponseEntity handleJwtException(CustomJwtException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse(errorCode.getMessage()));
+    }
+}
