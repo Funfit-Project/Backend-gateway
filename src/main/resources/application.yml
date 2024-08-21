@@ -30,6 +30,14 @@ spring:
           filters:
             - RewritePath=/auth/(?<segment>.*), /$\{segment}
 
+        # 스웨거
+        - id: auth-service
+          uri: lb://AUTH-SERVICE
+          predicates:
+            - Path=/auth/v3/api-docs
+          filters:
+            - RewritePath=/auth/(?<segment>.*), /$\{segment}
+
         - id: auth-service
           uri: lb://AUTH-SERVICE
           predicates:
@@ -41,6 +49,14 @@ spring:
                 preLogger: true
                 postLogger: true
 
+        # 스웨거
+        - id: pt-service
+          uri: lb://PT-SERVICE
+          predicates:
+            - Path=/pt/v3/api-docs
+          filters:
+            - RewritePath=/pt/(?<segment>.*), /$\{segment}
+
         - id: pt-service
           uri: lb://PT-SERVICE
           predicates:
@@ -51,6 +67,14 @@ spring:
               args:
                 preLogger: true
                 postLogger: true
+
+        # 스웨거
+        - id: community-service
+          uri: lb://COMMUNITY-SERVICE
+          predicates:
+            - Path=/community/v3/api-docs
+          filters:
+            - RewritePath=/community/(?<segment>.*), /$\{segment}
 
         - id: community-service
           uri: lb://COMMUNITY-SERVICE
@@ -65,3 +89,19 @@ spring:
 
 jwt:
   secret: ${JWT_SECRET}
+
+springdoc:
+  enable-native-support: true
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    urls:
+      - name: auth-service
+        url: /auth/v3/api-docs
+      - name: pt-service
+        url: /pt/v3/api-docs
+      - name: community-service
+        url: /community/v3/api-docs
+    use-root-path: true
