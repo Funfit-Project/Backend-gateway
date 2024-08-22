@@ -1,36 +1,107 @@
+server:
+  port: 8080
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://eureka-discovery:8761/eureka
+
 spring:
+  application:
+    name: gateway-service
   cloud:
     gateway:
       routes:
-        - id: auth_join
-          uri: http://54.91.140.154:8080
+        - id: auth-service
+          uri: lb://AUTH-SERVICE
           predicates:
-            - Path=/auth/join/**
+            - Path=/auth/join
+            - Method=POST
+          filters:
+            - RewritePath=/auth/(?<segment>.*), /$\{segment}
 
-        - id: auth_login
-          uri: http://54.91.140.154:8080
+        - id: auth-service
+          uri: lb://AUTH-SERVICE
           predicates:
-            - Path=/auth/login/**
+            - Path=/auth/login
+            - Method=POST
+          filters:
+            - RewritePath=/auth/(?<segment>.*), /$\{segment}
 
-        - id: auth
-          uri: http://54.91.140.154:8080
+        # 스웨거
+        - id: auth-service
+          uri: lb://AUTH-SERVICE
+          predicates:
+            - Path=/auth/v3/api-docs
+          filters:
+            - RewritePath=/auth/(?<segment>.*), /$\{segment}
+
+        - id: auth-service
+          uri: lb://AUTH-SERVICE
           predicates:
             - Path=/auth/**
           filters:
-            - JwtFilter
+            - RewritePath=/auth/(?<segment>.*), /$\{segment}
+            - name: JwtFilter
+              args:
+                preLogger: true
+                postLogger: true
 
-        - id: pt
-          uri: http://18.204.194.45:8080
+        # 스웨거
+        - id: pt-service
+          uri: lb://PT-SERVICE
+          predicates:
+            - Path=/pt/v3/api-docs
+          filters:
+            - RewritePath=/pt/(?<segment>.*), /$\{segment}
+
+        - id: pt-service
+          uri: lb://PT-SERVICE
           predicates:
             - Path=/pt/**
           filters:
-            - JwtFilter
+            - RewritePath=/pt/(?<segment>.*), /$\{segment}
+            - name: JwtFilter
+              args:
+                preLogger: true
+                postLogger: true
 
-        - id: community
-          uri: http://3.87.92.5:8080
+        # 스웨거
+        - id: community-service
+          uri: lb://COMMUNITY-SERVICE
+          predicates:
+            - Path=/community/v3/api-docs
+          filters:
+            - RewritePath=/community/(?<segment>.*), /$\{segment}
+
+        - id: community-service
+          uri: lb://COMMUNITY-SERVICE
           predicates:
             - Path=/community/**
           filters:
-            - JwtFilter
+            - RewritePath=/community/(?<segment>.*), /$\{segment}
+            - name: JwtFilter
+              args:
+                preLogger: true
+                postLogger: true
+
 jwt:
   secret: ${JWT_SECRET}
+
+springdoc:
+  enable-native-support: true
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    urls:
+      - name: auth-service
+        url: /auth/v3/api-docs
+      - name: pt-service
+        url: /pt/v3/api-docs
+      - name: community-service
+        url: /community/v3/api-docs
+    use-root-path: true

@@ -1,0 +1,12 @@
+services:
+  springboot:
+    build: .
+    image: gateway
+    container_name: gateway
+    ports:
+      - "80:8080"
+
+networks:
+  default:
+    external:
+      name: funfit
