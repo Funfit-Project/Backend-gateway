@@ -26,6 +26,7 @@ jobs:
         with:
           files: ./src/main/resources/application.yml
         env:
+          eureka.client.service-url: ${{ secrets.DISCOVERY_URL }}
           jwt.secret: ${{ secrets.JWT_SECRET }}
 
       - name: build with gradle
