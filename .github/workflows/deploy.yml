@@ -53,4 +53,4 @@ jobs:
           script: |
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/funfit_gateway
             docker rm -f $(docker ps -qa)
-            docker run -d --name funfit_gateway -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/funfit_gateway:latest
+            docker run -d --name funfit_gateway -p 80:8080 ${{ secrets.DOCKER_USERNAME }}/funfit_gateway:latest
