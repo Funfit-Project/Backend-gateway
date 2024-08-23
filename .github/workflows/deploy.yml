@@ -26,7 +26,7 @@ jobs:
         with:
           files: ./src/main/resources/application.yml
         env:
-          eureka.client.service-url.defaultZone: ${{ secrets.DISCOVERY_URL }}
+#          eureka.client.service-url.defaultZone: ${{ secrets.DISCOVERY_URL }}
           jwt.secret: ${{ secrets.JWT_SECRET }}
 
       - name: build with gradle
@@ -54,4 +54,4 @@ jobs:
           script: |
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/funfit_gateway
             docker rm -f $(docker ps -qa)
-            docker run -d --name funfit_gateway -p 80:8080 ${{ secrets.DOCKER_USERNAME }}/funfit_gateway:latest
+            docker run -d --name funfit_gateway -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/funfit_gateway:latest
