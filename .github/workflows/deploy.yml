@@ -26,7 +26,6 @@ jobs:
         with:
           files: ./src/main/resources/application.yml
         env:
-#          eureka.client.service-url.defaultZone: ${{ secrets.DISCOVERY_URL }}
           jwt.secret: ${{ secrets.JWT_SECRET }}
 
       - name: build with gradle
@@ -54,7 +53,7 @@ jobs:
           script: |
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/funfit_gateway
             
-            existing_container=$(docker ps -q -f name=funfit_gateway)
+            existing_container=$(docker ps -a -q -f name=funfit_gateway)
             if [ -n "$existing_container" ]; then
             docker rm -f $existing_container
             fi
